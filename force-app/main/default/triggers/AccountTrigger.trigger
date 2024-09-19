@@ -16,6 +16,12 @@ trigger AccountTrigger on Account (before insert){
                 a.put('Billing' + field, a.get('Shipping' + field));
             }
         }
-    }
 
+        //Set rating to 'Hot' if phone, website, and fax all have a value. 
+        if(a.get('Rating') != 'Hot'){
+            if(a.get('Phone') != null && a.get('Website') != null && a.get('Fax') != null){
+                a.put('Rating','Hot');
+            }
+        }
+    }
 }
