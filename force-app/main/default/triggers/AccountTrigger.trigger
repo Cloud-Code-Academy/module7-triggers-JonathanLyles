@@ -1,4 +1,5 @@
-trigger AccountTrigger on Account (before insert){
+trigger AccountTrigger on Account (before insert, after insert){
+    List<Contact> defaultContacts = new List<Contact>();
     for(Account a : Trigger.new){
         //Lists of Billing and Shipping Fields
         List<String> fieldList = new List<String>{'Street','City', 'State','PostalCode', 'Country'};
@@ -22,6 +23,16 @@ trigger AccountTrigger on Account (before insert){
             if(a.get('Phone') != null && a.get('Website') != null && a.get('Fax') != null){
                 a.put('Rating','Hot');
             }
+        }
+    }
+
+    if(Trigger.isAfter == true && Trigger.isInsert == true){
+        for(Account a : Trigger.new){
+            Contact newCon = new Contact(LastName = 'DefaultContact', Email = 'default@email.com', AccountId = a.Id);
+            defaultContacts.add(newCon);
+        }     
+        if(defaultContacts.size() > 0){
+            insert defaultContacts;
         }
     }
 }
