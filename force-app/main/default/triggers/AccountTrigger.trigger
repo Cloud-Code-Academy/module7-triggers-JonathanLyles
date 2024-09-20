@@ -25,7 +25,7 @@ trigger AccountTrigger on Account (before insert, after insert){
             }
         }
     }
-
+    //Default contact
     if(Trigger.isAfter == true && Trigger.isInsert == true){
         for(Account a : Trigger.new){
             Contact newCon = new Contact(LastName = 'DefaultContact', Email = 'default@email.com', AccountId = a.Id);
