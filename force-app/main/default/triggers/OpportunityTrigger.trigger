@@ -48,15 +48,13 @@ trigger OpportunityTrigger on Opportunity (before insert, before update, before 
         for(Opportunity opp : Trigger.new){
             accIDs.add(opp.AccountId);
         }
-        System.debug('Account Id: ' + accIDs);
+       
         Map<Id,Id> accIdConIdMap = new Map<Id,Id>();
         for(Contact ceo : [SELECT Id, FirstName, Title, AccountId FROM Contact WHERE Title = 'CEO' AND AccountId IN :accIDs]){
             System.debug('Current CEO: ' + ceo);
             accIdConIdMap.put(ceo.AccountId,ceo.Id);
         }
-        System.debug(accIdConIdMap);
-
-        Map<Id,Map<Id,Id>> oppIdAccIdConIdMap = new Map<Id,Map<Id,Id>>();
+   
         for(Opportunity opp : Trigger.new){
             opp.Primary_Contact__c = accIdConIdMap.get(opp.AccountId);
         }    
