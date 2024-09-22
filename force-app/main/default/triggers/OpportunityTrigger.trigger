@@ -42,40 +42,7 @@ trigger OpportunityTrigger on Opportunity (before insert, before update, before 
     * Question 7 Opportunity Trigger
     * When an opportunity is updated set the primary contact on the opportunity to the contact on the same account with the title of 'CEO'.
     * Trigger should only fire on update.
-    
-    if(Trigger.isUpdate == true){
-        List<Id> accountIDs = new List<Id>();
-        for(Opportunity opp : Trigger.new){
-            accountIDs.add(opp.AccountId);
-        }
-
-        //Inner Map
-        Map<Id, Id> accountIdContactIdMap = new Map<Id, Id>();
-        List<OpportunityContactRole> opportunityContactRoleList = new List<OpportunityContactRole>();
-        OpportunityContactRole primaryCon = new OpportunityContactRole();
-
-        for (Account acc : [SELECT Id, (SELECT Id FROM Contacts WHERE Title = 'CEO' LIMIT 1) FROM Account WHERE Id IN :accountIDs]) {
-            if (!acc.Contacts.isEmpty()) {
-                accountIdContactIdMap.put(acc.Id, acc.Contacts[0].Id);
-                System.debug(accountIdContactIdMap);
-            }
-        }
-
-        List<Opportunity> opportunitiesToUpdate = new List<Opportunity>([SELECT Id, AccountId FROM Opportunity WHERE AccountId IN :accountIdContactIdMap.keySet() AND AccountId IN :accountIDs]);
-
-        for(Opportunity opp : Trigger.new){
-            primaryCon.OpportunityId = opp.Id;
-            primaryCon.ContactId = accountIdContactIdMap.get(opp.Id);
-            primaryCon.IsPrimary = true;
-            opportunityContactRoleList.add(primaryCon);
-            //System.debug(primaryCon);
-        }
-        } 
-    */
-    
-    //System.debug(opportunityContactRoleList);
-
-    //Question 7
+    */ 
     if(Trigger.isUpdate){
         List<Id> accIDs = new List<Id>();
         for(Opportunity opp : Trigger.new){
@@ -94,14 +61,4 @@ trigger OpportunityTrigger on Opportunity (before insert, before update, before 
             opp.Primary_Contact__c = accIdConIdMap.get(opp.AccountId);
         }    
     }
-    
-        
-         
-
-
-
-   
-
-
-    }
-        
+}
